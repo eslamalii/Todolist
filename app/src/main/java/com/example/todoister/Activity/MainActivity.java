@@ -8,7 +8,10 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.todoister.Adapter.RecyclerViewAdapter;
 import com.example.todoister.Model.Priority;
 import com.example.todoister.Model.Task;
 import com.example.todoister.Model.TaskViewModel;
@@ -19,6 +22,9 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     private TaskViewModel viewModel;
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +32,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         viewModel = new ViewModelProvider.AndroidViewModelFactory(MainActivity.this.getApplication()).create(TaskViewModel.class);
+
+        viewModel.getDATA().observe(this, tasks -> {
+            adapter = new RecyclerViewAdapter(tasks);
+            recyclerView.setAdapter(adapter);
+        });
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
