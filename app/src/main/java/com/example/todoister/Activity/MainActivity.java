@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 //                        Calendar.getInstance().getTime(), true);
 //
 //                TaskViewModel.insert(task);
-                showBottomSheetDialog()
+                showBottomSheetDialog();
             }
         });
     }
