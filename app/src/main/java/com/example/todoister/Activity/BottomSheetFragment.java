@@ -84,6 +84,7 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
                         Calendar.getInstance().getTime(), false);
                 TaskViewModel.insert(myTask);
             }
+            dismiss();
         });
 
     }
