@@ -126,6 +126,7 @@
         android:layout_height="51dp"
         android:layout_marginTop="8dp"
         android:orientation="horizontal"
+        style="@style/Theme.Todoister"
         android:padding="@dimen/dimen_10"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
@@ -161,7 +162,8 @@
         android:id="@+id/calendar_group"
         android:layout_width="280dp"
         android:layout_height="0dp"
-        android:visibility="gone"
+        android:outlineSpotShadowColor="@color/black"
+        android:visibility="visible"
         app:constraint_referenced_ids="calendar_view,next_week_chip,tomorrow_chip,today_chip,textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

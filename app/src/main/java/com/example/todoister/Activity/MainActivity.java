@@ -1,6 +1,7 @@
 package com.example.todoister.Activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,21 +13,21 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.todoister.Adapter.OnTodoClickListener;
 import com.example.todoister.Adapter.RecyclerViewAdapter;
-import com.example.todoister.Model.Priority;
+import com.example.todoister.Model.SharedViewModel;
 import com.example.todoister.Model.Task;
 import com.example.todoister.Model.TaskViewModel;
 import com.example.todoister.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.Calendar;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnTodoClickListener {
     private TaskViewModel viewModel;
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
     private BottomSheetFragment bottomSheetFragment;
+    private SharedViewModel sharedViewModel;
 
 
     @Override
@@ -47,8 +48,10 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider.AndroidViewModelFactory(MainActivity.this.getApplication()).create(TaskViewModel.class);
 
+        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+
         viewModel.getDATA().observe(this, tasks -> {
-            adapter = new RecyclerViewAdapter(tasks);
+            adapter = new RecyclerViewAdapter(tasks, this);
             recyclerView.setAdapter(adapter);
         });
 
@@ -89,5 +92,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onTodoClick(Task task) {
+        sharedViewModel.selectItem(task);
+        sharedViewModel.setIsEdit(true);
+    }
+
+    @Override
+    public void obTodoRadioButtonOnClick(Task task) {
+        TaskViewModel.delete(task);
+        adapter.notifyDataSetChanged();
     }
 }

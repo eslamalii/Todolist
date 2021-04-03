@@ -22,8 +22,4 @@
     <style name="Theme.Todoister.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Todoister.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="TextTheme" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@color/white</item>
-    </style>
 </resources>

@@ -1,5 +1,7 @@
 package com.example.todoister.Adapter;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +20,11 @@ import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private final List<Task> tasks;
+    private final OnTodoClickListener todoClickListener;
 
-    public RecyclerViewAdapter(List<Task> tasks) {
+    public RecyclerViewAdapter(List<Task> tasks, OnTodoClickListener todoClickListener) {
         this.tasks = tasks;
+        this.todoClickListener = todoClickListener;
     }
 
     @NonNull
@@ -35,8 +39,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Task task = tasks.get(position);
         String formatted = Utils.formatDate(task.getDueDate());
 
+        ColorStateList colorStateList = new ColorStateList(new int[][]{
+                new int[]{-android.R.attr.state_enabled},
+                new int[]{android.R.attr.state_enabled}
+        },
+                new int[]{
+                        Color.LTGRAY,
+                        Utils.priorityColor(task)
+                });
+
         holder.task.setText(task.getTaskName());
         holder.todayChip.setText(formatted);
+        holder.todayChip.setTextColor(Utils.priorityColor(task));
+        holder.todayChip.setChipIconTint(colorStateList);
+        holder.radioButton.setButtonTintList(colorStateList);
     }
 
     @Override
@@ -44,10 +60,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return tasks.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public AppCompatRadioButton radioButton;
         public AppCompatTextView task;
         public Chip todayChip;
+
+        OnTodoClickListener onTodoClickListener;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -55,6 +73,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             radioButton = itemView.findViewById(R.id.todo_radio_button);
             task = itemView.findViewById(R.id.todo_row_todo);
             todayChip = itemView.findViewById(R.id.todo_row_chip);
+            this.onTodoClickListener = todoClickListener;
+
+            itemView.setOnClickListener(this);
+
+            radioButton.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            Task currentTask = tasks.get(getAdapterPosition());
+            int id = v.getId();
+            if (id == R.id.todo_row_layout) {
+                onTodoClickListener.onTodoClick(currentTask);
+            } else if (id == R.id.todo_radio_button) {
+                onTodoClickListener.obTodoRadioButtonOnClick(currentTask);
+            }
+
         }
     }
 }
